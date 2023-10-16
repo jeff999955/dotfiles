@@ -1,0 +1,62 @@
+"$schema" = 'https://starship.rs/config-schema.json'
+
+format = '''
+$username$directory$hostname $time $status $git_branch$git_commit$git_state$git_metrics$git_status
+$c$cmake$conda$python$package$nodejs$docker_context
+$character
+'''
+
+[character]
+success_symbol = '[👏]()'
+error_symbol = '[🤡]()'
+
+[c]
+format = ' [$version]($style) '
+detect_extensions = ['c', 'h', 'cpp', 'cc', 'c++']
+commands = [ [ 'cc', '--version' ], [ 'gcc', '--version' ], [ 'clang', '--version' ], ['g++', '--version'] ]
+style = 'bold 149 fg:21'
+version_format = '$raw'
+
+[cmake]
+format = '$symbol[$version]($style) '
+version_format = '$raw'
+
+[cmd_duration]
+show_notifications = true
+min_time_to_notify = 3_600_000  # This is particularly useful when training models, not working though
+
+[conda]
+ignore_base = false
+
+[dart]
+format = '[$symbol($version )]($style) '
+
+[docker_context]
+format = '[$symbol$context]($style) '
+
+[hostname]
+format = '[$ssh_symbol $hostname]($style) '
+ssh_symbol = '🖥️ '
+
+[memory_usage]
+disabled = false
+threshold = -1
+symbol = '🧠'
+format = '$symbol [${ram} \($ram_pct\)( | SW: $swap_pct)]($style) '
+
+[time]
+disabled = false
+format = '🕙[ $time ]($style) '
+time_format = '%T'
+utc_time_offset = '-7'
+
+[custom.foo]
+command = 'nvcc --version'
+detect_files = ['.cu']
+format = 'CUDA: [$output]($style)'
+
+[username]
+show_always = true
+
+[status]
+disabled = false
