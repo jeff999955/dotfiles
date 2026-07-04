@@ -14,6 +14,9 @@ source "$ZSH/oh-my-zsh.sh"
 
 # ---- User configuration ----------------------------------------------------
 
+# Personal scripts / user-installed binaries
+[[ ":$PATH:" != *":$HOME/.local/bin:"* ]] && export PATH="$HOME/.local/bin:$PATH"
+
 # uv / rust shims (writes $HOME/.local/bin/env)
 [ -f "$HOME/.local/bin/env" ] && . "$HOME/.local/bin/env"
 

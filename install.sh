@@ -19,10 +19,12 @@ create_symlink() {
 
 # ---- top-level rc files ----------------------------------------------------
 # Everything at the repo root except metadata and the .ssh dir (handled below).
+# .zshrc is handled in the oh-my-zsh section since it depends on omz.
 for file in $(find $SCRIPT_DIR -maxdepth 1 -type f \( \
                 -not -name 'README.md'                \
                 -and -not -name 'LICENSE'             \
                 -and -not -name '.gitignore'          \
+                -and -not -name '.zshrc'              \
                 -and -not -name $(basename "$0")      \
     \)); do
 
@@ -43,16 +45,27 @@ if [[ -d $SCRIPT_DIR/.config ]]; then
     done
 fi
 
-# ---- oh-my-zsh + external plugins ------------------------------------------
+# ---- oh-my-zsh + zsh config ------------------------------------------------
+# .zshrc and the external plugins assume oh-my-zsh is present, so gate them on it.
 if [[ ! -d $HOME/.oh-my-zsh ]]; then
-    echo "oh-my-zsh not found. Install it with:"
-    echo '  sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"'
+    read -r -p "oh-my-zsh not found. Install it now? [Y/n] " reply
+    if [[ ! $reply =~ ^[Nn]$ ]]; then
+        # Link our .zshrc first so the installer preserves it (--keep-zshrc).
+        create_symlink $SCRIPT_DIR/.zshrc $HOME/.zshrc
+        RUNZSH=no CHSH=no sh -c \
+            "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" \
+            "" --unattended --keep-zshrc
+    fi
 fi
 
-ZSH_CUSTOM=${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}
 if [[ -d $HOME/.oh-my-zsh ]]; then
+    create_symlink $SCRIPT_DIR/.zshrc $HOME/.zshrc
+
+    ZSH_CUSTOM=${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}
     [[ -d $ZSH_CUSTOM/plugins/zsh-autosuggestions ]] || \
         git clone https://github.com/zsh-users/zsh-autosuggestions "$ZSH_CUSTOM/plugins/zsh-autosuggestions"
     [[ -d $ZSH_CUSTOM/plugins/zsh-syntax-highlighting ]] || \
         git clone https://github.com/zsh-users/zsh-syntax-highlighting "$ZSH_CUSTOM/plugins/zsh-syntax-highlighting"
+else
+    echo "Skipping .zshrc and zsh plugins (oh-my-zsh not installed)."
 fi
