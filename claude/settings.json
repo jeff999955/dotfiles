@@ -1,0 +1,63 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash",
+      "Bash(mkdir *)",
+      "Bash(mkdir -p *)",
+      "Bash(mkdir * .claude/*)",
+      "Bash(touch * .claude/*)",
+      "Read",
+      "Write",
+      "Edit",
+      "WebFetch",
+      "Grep",
+      "Glob",
+      "Explore",
+      "Plan",
+      "mcp__fs",
+      "mcp__slack",
+      "Update",
+      "Tool",
+      "Monitor",
+      "mcp__linear-server__list_teams",
+      "mcp__linear-server__list_projects",
+      "mcp__linear-server__save_project",
+      "mcp__linear-server__save_issue",
+      "mcp__slack-bot__slack_post_message",
+      "mcp__slack-user__slack_post_message"
+    ],
+    "deny": [
+      "Bash(rm:*)",
+      "Bash(find*-delete*)",
+      "Bash(rsync*--delete*)"
+    ],
+    "ask": []
+  },
+  "enabledMcpjsonServers": [
+    "fs",
+    "slack"
+  ],
+  "enabledPlugins": {
+    "document-skills@anthropic-agent-skills": true,
+    "codex@openai-codex": true,
+    "clangd-lsp@claude-plugins-official": false,
+    "context7@claude-plugins-official": true,
+    "skill-creator@claude-plugins-official": true,
+    "notion@claude-plugins-official": true
+  },
+  "extraKnownMarketplaces": {
+    "anthropic-agent-skills": {
+      "source": {
+        "source": "github",
+        "repo": "anthropics/skills"
+      }
+    }
+  },
+  "theme": "dark-ansi",
+  "preferredNotifChannel": "ghostty",
+  "remoteControlAtStartup": true,
+  "inputNeededNotifEnabled": true,
+  "agentPushNotifEnabled": true,
+  "voiceEnabled": true,
+  "tui": "fullscreen"
+}
