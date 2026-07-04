@@ -1,0 +1,11 @@
+# Local snapshot of $HOME used to rebuild these dotfiles — never commit.
+# It contains private keys, history, and machine-local state.
+reference/
+
+# Guard against accidentally committing secrets
+.ssh/id_*
+!.ssh/id_*.pub
+.ssh/known_hosts*
+.ssh/agent/
+*.pem
+*.key
