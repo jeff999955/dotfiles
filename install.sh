@@ -17,6 +17,30 @@ create_symlink() {
     fi
 }
 
+create_symlink_backup() {
+    if [[ $# -ne 2 ]]; then
+        echo $FUNCNAME: expect 2 arguments, got $#
+        echo usage: $FUNCNAME src dest
+        return 1
+    fi
+
+    # Already the symlink we want; nothing to do.
+    if [[ -L $2 && $(readlink "$2") == "$1" ]]; then
+        echo "$2 already linked -> $1"
+        return 0
+    fi
+
+    # Back up any existing file/symlink before linking.
+    if [[ -e $2 || -L $2 ]]; then
+        backup=$2.backup.$(date +%Y%m%d%H%M%S)
+        mv "$2" "$backup"
+        echo "backed up $2 -> $backup"
+    fi
+
+    ln -s $1 $2
+    echo "linked $2 -> $1"
+}
+
 # ---- top-level rc files ----------------------------------------------------
 # Everything at the repo root except metadata and the .ssh dir (handled below).
 # .zshrc is handled in the oh-my-zsh section since it depends on omz.
@@ -51,7 +75,7 @@ if [[ ! -d $HOME/.oh-my-zsh ]]; then
     read -r -p "oh-my-zsh not found. Install it now? [Y/n] " reply
     if [[ ! $reply =~ ^[Nn]$ ]]; then
         # Link our .zshrc first so the installer preserves it (--keep-zshrc).
-        create_symlink $SCRIPT_DIR/.zshrc $HOME/.zshrc
+        create_symlink_backup $SCRIPT_DIR/.zshrc $HOME/.zshrc
         RUNZSH=no CHSH=no sh -c \
             "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" \
             "" --unattended --keep-zshrc
@@ -59,7 +83,7 @@ if [[ ! -d $HOME/.oh-my-zsh ]]; then
 fi
 
 if [[ -d $HOME/.oh-my-zsh ]]; then
-    create_symlink $SCRIPT_DIR/.zshrc $HOME/.zshrc
+    create_symlink_backup $SCRIPT_DIR/.zshrc $HOME/.zshrc
 
     ZSH_CUSTOM=${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}
     [[ -d $ZSH_CUSTOM/plugins/zsh-autosuggestions ]] || \
