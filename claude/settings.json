@@ -1,6 +1,7 @@
 {
   "permissions": {
     "allow": [
+      "Artifact",
       "Bash",
       "Bash(mkdir *)",
       "Bash(mkdir -p *)",
@@ -17,9 +18,9 @@
       "mcp__fs",
       "mcp__slack",
       "Update",
-      "Tool",
+      "NotebookEdit",
       "Monitor",
-      "Web Search",
+      "WebSearch",
       "mcp__linear-server__list_teams",
       "mcp__linear-server__list_projects",
       "mcp__linear-server__save_project",
